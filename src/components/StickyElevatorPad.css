@@ -1,0 +1,102 @@
+.elevator-pad {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 70px;
+    background: rgba(20, 21, 20, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.pad-display {
+    width: 100%;
+    height: 40px;
+    background: #000;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ff3300;
+    /* classic digital red */
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 1px solid #333;
+    box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.pad-display .arrow {
+    margin-left: 5px;
+    font-size: 0.8rem;
+    animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.buttons-grid {
+    display: flex;
+    flex-direction: column-reverse;
+    /* Bottom to top */
+    gap: 15px;
+}
+
+.floor-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #444, #222);
+    border: 1px solid #555;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.floor-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.floor-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.floor-btn.active {
+    border-color: #F08F24;
+    box-shadow: 0 0 15px rgba(240, 143, 36, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.floor-btn.active::after {
+    border-color: rgba(240, 143, 36, 0.5);
+}

@@ -1,0 +1,6 @@
+/* App specific styles, empty for now as we use CSS modules or inline GSAP */
+.page-transition-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}

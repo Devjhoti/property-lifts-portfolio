@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Manrope:wght@300;400;600;800&display=swap');
+
+:root {
+  --color-primary-1: #1DA19F; /* Teal */
+  --color-primary-2: #F08F24; /* Orange/Gold */
+  --color-text: #202120;      /* Dark Charcoal */
+  --color-text-invert: #FFFFFF;
+  --color-bg: #FFFFFF;        /* White */
+  --color-bg-dark: #121312;   /* Premium Dark */
+
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Manrope', sans-serif;
+
+  --nav-width: 80px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  /* Smooth scrolling could be handled by GSAP, but basic CSS here */
+  scroll-behavior: auto; /* GSAP will handle smooth scroll */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+p {
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Base utility classes for GSAP animation targets */
+.reveal-text {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.premium-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.5rem;
+  background: var(--color-primary-1);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s ease;
+  cursor: pointer;
+  border: 1px solid var(--color-primary-1);
+}
+
+.premium-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--color-primary-2);
+  transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 0;
+}
+
+.premium-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.premium-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Layout */
+.app-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
