@@ -1,0 +1,139 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 5%;
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+}
+
+.navbar.scrolled {
+    padding: 15px 5%;
+    background: rgba(18, 19, 18, 0.85);
+    /* var(--color-bg-dark) with opacity */
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    height: 50px;
+}
+
+.logo-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: auto;
+    transition: opacity 0.4s ease, transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.logo-white {
+    opacity: 0;
+    /* Hidden by default */
+}
+
+.logo-normal {
+    opacity: 1;
+    /* Visible by default */
+}
+
+/* Swap visibilities when scrolled */
+.navbar.scrolled .logo-normal {
+    opacity: 0;
+}
+
+.navbar.scrolled .logo-white {
+    opacity: 1;
+}
+
+.logo-wrapper:hover .logo-img {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+}
+
+.nav-link {
+    color: var(--color-text-invert);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary-1);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-primary-1);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.premium-text {
+    color: var(--color-primary-2);
+}
+
+.premium-text::after {
+    background: var(--color-primary-2);
+}
+
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile-menu-btn span {
+    width: 30px;
+    height: 2px;
+    background: var(--color-text-invert);
+    transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+    }
+}

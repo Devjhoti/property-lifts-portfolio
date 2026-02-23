@@ -38,7 +38,7 @@ const HeroSection = () => {
                 playsInline
                 className="bg-video"
             >
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4" type="video/mp4" />
+                <source src="https://res.cloudinary.com/dxez9kmnn/video/upload/v1771813091/2818559-Uhd_3840_2160_24Fps_rjvqsu.mp4" type="video/mp4" />
             </video>
             <div className="hero-overlay"></div>
 

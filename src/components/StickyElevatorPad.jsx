@@ -1,17 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './StickyElevatorPad.css';
 
 const floors = [
-    { id: 4, name: 'Contact', target: '#contact-section' },
-    { id: 3, name: 'Products', target: '#products-section' },
+    { id: 7, name: 'Contact', target: '#contact-section' },
+    { id: 6, name: 'News', target: '#news-section' },
+    { id: 5, name: 'FAQ', target: '#faq-section' },
+    { id: 4, name: 'Collection', target: '#products-section' },
+    { id: 3, name: 'About Us', target: '#about-section' },
     { id: 2, name: 'Vision', target: '#vision-section' },
     { id: 1, name: 'Lobby', target: '#hero-section' },
 ];
 
 const StickyElevatorPad = () => {
     const [activeFloor, setActiveFloor] = useState(1);
-    const [isTravelling, setIsTravelling] = useState(false);
+    const isTravelling = useRef(false);
 
     // Sound effect
     const playDing = () => {
@@ -24,23 +28,25 @@ const StickyElevatorPad = () => {
         // Setup scroll triggers to update active floor on scroll
         const sections = floors.map(f => document.querySelector(f.target));
 
-        sections.forEach((sec, idx) => {
-            if (!sec) return;
-            gsap.to(sec, {
-                scrollTrigger: {
-                    trigger: sec,
-                    start: 'top center',
-                    end: 'bottom center',
-                    onEnter: () => !isTravelling && setActiveFloor(floors[idx].id),
-                    onEnterBack: () => !isTravelling && setActiveFloor(floors[idx].id),
-                }
+        const triggers = sections.map((sec, idx) => {
+            if (!sec) return null;
+            return ScrollTrigger.create({
+                trigger: sec,
+                start: 'top 50%',
+                end: 'bottom 50%',
+                onEnter: () => { if (!isTravelling.current) setActiveFloor(floors[idx].id) },
+                onEnterBack: () => { if (!isTravelling.current) setActiveFloor(floors[idx].id) },
             });
         });
-    }, [isTravelling]);
+
+        return () => {
+            triggers.forEach(t => t && t.kill());
+        };
+    }, []);
 
     const handleFloorClick = (floor) => {
-        if (isTravelling || activeFloor === floor.id) return;
-        setIsTravelling(true);
+        if (isTravelling.current || activeFloor === floor.id) return;
+        isTravelling.current = true;
         setActiveFloor(floor.id);
 
         gsap.to(window, {
@@ -48,9 +54,8 @@ const StickyElevatorPad = () => {
             scrollTo: floor.target,
             ease: 'power3.inOut',
             onComplete: () => {
-                setIsTravelling(false);
+                isTravelling.current = false;
                 playDing();
-                // The door open animation event could be triggered here or handled by scroll triggers within components
             }
         });
     };
@@ -59,7 +64,7 @@ const StickyElevatorPad = () => {
         <div className="elevator-pad">
             <div className="pad-display">
                 <span className="floor-number">{activeFloor === 1 ? 'G' : activeFloor - 1}</span>
-                {isTravelling && <span className="arrow">↑↓</span>}
+                {isTravelling.current && <span className="arrow">↑↓</span>}
             </div>
             <div className="buttons-grid">
                 {floors.map((floor) => (

@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
+import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import VisionSection from '../components/VisionSection';
 import ProductsSection from '../components/ProductsSection';
 import ContactSection from '../components/ContactSection';
+import AboutSection from '../components/AboutSection';
+import FAQSection from '../components/FAQSection';
+import NewsSection from '../components/NewsSection';
 import StickyElevatorPad from '../components/StickyElevatorPad';
+import DoorReveal from '../components/DoorReveal';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -18,11 +23,27 @@ const Home = () => {
 
     return (
         <div className="home-container">
+            <Navbar />
             <StickyElevatorPad />
             <HeroSection />
-            <VisionSection />
-            <ProductsSection />
-            <ContactSection />
+            <DoorReveal>
+                <VisionSection />
+            </DoorReveal>
+            <DoorReveal>
+                <AboutSection />
+            </DoorReveal>
+            <DoorReveal>
+                <ProductsSection />
+            </DoorReveal>
+            <DoorReveal>
+                <FAQSection />
+            </DoorReveal>
+            <DoorReveal>
+                <NewsSection />
+            </DoorReveal>
+            <DoorReveal>
+                <ContactSection />
+            </DoorReveal>
         </div>
     );
 };

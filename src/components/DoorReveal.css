@@ -1,0 +1,75 @@
+.door-reveal-container {
+    position: relative;
+    width: 100%;
+    /* Grows to fit children, preventing clipping of the inner section content */
+}
+
+.door-panel {
+    position: absolute;
+    top: 0;
+    width: 50.1%;
+    /* .1% prevents middle whitespace seam */
+    height: 100%;
+    background: #121312;
+    /* Dark graphite base */
+    z-index: 50;
+    /* Above Section content, below navigations */
+    pointer-events: auto;
+    /* Blocks clicks until moved away */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.door-left {
+    left: 0;
+    border-right: 2px solid var(--color-primary-2);
+    /* Gold trim */
+    box-shadow: 15px 0 30px rgba(0, 0, 0, 0.6);
+    justify-content: flex-end;
+    /* indicator pushed to the center opening */
+}
+
+.door-right {
+    right: 0;
+    border-left: 2px solid var(--color-primary-2);
+    /* Gold trim */
+    box-shadow: -15px 0 30px rgba(0, 0, 0, 0.6);
+    justify-content: flex-start;
+}
+
+.door-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255, 255, 255, 0.01) 40px, rgba(255, 255, 255, 0.01) 42px);
+    z-index: 1;
+}
+
+/* Central indicator light resembling elevator call signals */
+.door-indicator {
+    position: relative;
+    z-index: 2;
+    width: 4px;
+    height: 120px;
+    background: var(--color-primary-1);
+    /* Teal glow */
+    box-shadow: 0 0 15px var(--color-primary-1), 0 0 30px var(--color-primary-1);
+    opacity: 0.8;
+}
+
+.door-left .door-indicator {
+    margin-right: -2px;
+}
+
+.door-right .door-indicator {
+    margin-left: -2px;
+}
+
+.door-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}

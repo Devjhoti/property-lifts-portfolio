@@ -39,51 +39,51 @@ const ElevatorScene = ({ config }) => {
     });
 
     return (
-        <group ref={groupRef} position={[0, -2, 0]}>
+        <group ref={groupRef} position={[0, 0, 0]}>
             {/* Floor */}
-            <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materialMap.floor[config.floor]} receiveShadow>
+            <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materialMap.floor[config.floor]} receiveShadow>
                 <planeGeometry args={[4, 4]} />
             </mesh>
 
             {/* Ceiling */}
-            <mesh position={[0, 4, 0]} rotation={[Math.PI / 2, 0, 0]} material={materialMap.ceiling[config.ceiling]}>
+            <mesh position={[0, 2, 0]} rotation={[Math.PI / 2, 0, 0]} material={materialMap.ceiling[config.ceiling]}>
                 <planeGeometry args={[4, 4]} />
             </mesh>
 
             {/* Back Wall */}
-            <mesh position={[0, 2, -2]} material={materialMap.body[config.body]} castShadow receiveShadow>
+            <mesh position={[0, 0, -2]} material={materialMap.body[config.body]} castShadow receiveShadow>
                 <planeGeometry args={[4, 4]} />
             </mesh>
 
             {/* Left Wall */}
-            <mesh position={[-2, 2, 0]} rotation={[0, Math.PI / 2, 0]} material={materialMap.body[config.body]} castShadow receiveShadow>
+            <mesh position={[-2, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={materialMap.body[config.body]} castShadow receiveShadow>
                 <planeGeometry args={[4, 4]} />
             </mesh>
 
             {/* Right Wall */}
-            <mesh position={[2, 2, 0]} rotation={[0, -Math.PI / 2, 0]} material={materialMap.body[config.body]} castShadow receiveShadow>
+            <mesh position={[2, 0, 0]} rotation={[0, -Math.PI / 2, 0]} material={materialMap.body[config.body]} castShadow receiveShadow>
                 <planeGeometry args={[4, 4]} />
             </mesh>
 
             {/* Handle Rail (Back Wall) */}
-            <mesh position={[0, 1.5, -1.8]} rotation={[0, 0, Math.PI / 2]} material={materialMap.handle[config.handle]} castShadow>
+            <mesh position={[0, -0.5, -1.8]} rotation={[0, 0, Math.PI / 2]} material={materialMap.handle[config.handle]} castShadow>
                 <cylinderGeometry args={[0.05, 0.05, 3, 16]} />
             </mesh>
 
             {/* Simple Button Panel Placeholder */}
-            <mesh position={[1.8, 1.5, -1]} rotation={[0, -Math.PI / 2, 0]}>
+            <mesh position={[1.8, -0.5, -1]} rotation={[0, -Math.PI / 2, 0]}>
                 <boxGeometry args={[0.4, 0.8, 0.05]} />
                 <meshStandardMaterial color="#000000" metalness={0.8} />
             </mesh>
 
             {/* Dummy Door Frame front */}
-            <mesh position={[-1.75, 2, 2]} material={materialMap.body[config.body]}>
+            <mesh position={[-1.75, 0, 2]} material={materialMap.body[config.body]}>
                 <boxGeometry args={[0.5, 4, 0.2]} />
             </mesh>
-            <mesh position={[1.75, 2, 2]} material={materialMap.body[config.body]}>
+            <mesh position={[1.75, 0, 2]} material={materialMap.body[config.body]}>
                 <boxGeometry args={[0.5, 4, 0.2]} />
             </mesh>
-            <mesh position={[0, 3.75, 2]} material={materialMap.body[config.body]}>
+            <mesh position={[0, 1.75, 2]} material={materialMap.body[config.body]}>
                 <boxGeometry args={[3, 0.5, 0.2]} />
             </mesh>
         </group>
