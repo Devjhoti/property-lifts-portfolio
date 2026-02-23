@@ -23,6 +23,11 @@ const options = {
         { id: 'silver', label: 'Chrome Silver', color: '#cccccc' },
         { id: 'gold', label: 'Brushed Gold', color: '#F08F24' },
         { id: 'matte_black', label: 'Matte Black', color: '#111111' }
+    ],
+    button_pad: [
+        { id: 'touch_glass', label: 'Smart Touch Glass', color: '#000000' },
+        { id: 'brushed_steel', label: 'Brushed Steel', color: '#cccccc' },
+        { id: 'vintage_gold', label: 'Vintage Gold', color: '#F08F24' }
     ]
 };
 

@@ -55,3 +55,58 @@
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     z-index: 5;
 }
+
+.cost-overlay {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    background: rgba(18, 19, 18, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    min-width: 300px;
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    color: var(--color-text-invert);
+}
+
+.cost-overlay h3 {
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+    color: var(--color-primary-2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.cost-overlay ul {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.cost-overlay li {
+    font-size: 0.95rem;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.spec-label {
+    color: #aaaaaa;
+    margin-right: 15px;
+}
+
+.cost-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+}
+
+.cost-total strong {
+    font-size: 1.4rem;
+    color: #27c4c2;
+    /* Bright Teal */
+}

@@ -55,3 +55,19 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
 }
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.premium-btn.secondary {
+    background: transparent;
+    border: 2px solid var(--color-primary-2);
+}
+
+.premium-btn.secondary::before {
+    background: var(--color-primary-1);
+}

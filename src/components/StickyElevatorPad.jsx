@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Phone, Mail, ChevronUp, ChevronDown } from 'lucide-react';
 import './StickyElevatorPad.css';
 
 const floors = [
@@ -66,6 +67,12 @@ const StickyElevatorPad = () => {
                 <span className="floor-number">{activeFloor === 1 ? 'G' : activeFloor - 1}</span>
                 {isTravelling.current && <span className="arrow">↑↓</span>}
             </div>
+
+            <div className="side-controls top">
+                <a href="tel:+8801977717777" className="icon-btn" title="Call Us"><Phone size={12} /></a>
+                <a href="mailto:info@propertylifts.com" className="icon-btn" title="Email Us"><Mail size={12} /></a>
+            </div>
+
             <div className="buttons-grid">
                 {floors.map((floor) => (
                     <button
@@ -77,6 +84,15 @@ const StickyElevatorPad = () => {
                         <span>{floor.id === 1 ? 'G' : floor.id - 1}</span>
                     </button>
                 ))}
+            </div>
+
+            <div className="side-controls bottom">
+                <button className="icon-btn" onClick={() => window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' })} title="Scroll Up">
+                    <ChevronUp size={14} />
+                </button>
+                <button className="icon-btn" onClick={() => window.scrollBy({ top: window.innerHeight, behavior: 'smooth' })} title="Scroll Down">
+                    <ChevronDown size={14} />
+                </button>
             </div>
         </div>
     );

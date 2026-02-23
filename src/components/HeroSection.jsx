@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useNavigate } from 'react-router-dom';
 import './HeroSection.css';
 
 const HeroSection = () => {
     const sectionRef = useRef(null);
     const textRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const tl = gsap.timeline();
@@ -29,6 +31,13 @@ const HeroSection = () => {
         });
     }, []);
 
+    const handleScrollToProducts = () => {
+        const element = document.getElementById('products-section');
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <section id="hero-section" ref={sectionRef} className="hero-section">
             <video
@@ -45,9 +54,15 @@ const HeroSection = () => {
             <div className="hero-content" ref={textRef}>
                 <h1 className="hero-title">Property Lifts</h1>
                 <p className="hero-subtitle">Elevating Luxury. Redefining Motion.</p>
-                <button className="premium-btn">
-                    <span>Discover Collection</span>
-                </button>
+
+                <div className="hero-buttons">
+                    <button className="premium-btn primary" onClick={handleScrollToProducts}>
+                        <span>Discover Collection</span>
+                    </button>
+                    <button className="premium-btn secondary" onClick={() => navigate('/design-your-lift')}>
+                        <span>Design Your Lift</span>
+                    </button>
+                </div>
             </div>
         </section>
     );
