@@ -42,6 +42,8 @@ const VisionSection = () => {
     const wrapperRef = useRef(null);
 
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+    const [hasEntered, setHasEntered] = useState(false);
     const isAnimating = useRef(false);
     const initialRender = useRef(true);
 
@@ -56,6 +58,7 @@ const VisionSection = () => {
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: 'top 60%',
+                        onEnter: () => setHasEntered(true)
                     }
                 }
             );
@@ -140,9 +143,25 @@ const VisionSection = () => {
 
     const slide = slides[currentSlide];
 
+    // Auto-advance slide every 4 seconds only after entering the section
+    useEffect(() => {
+        if (!hasEntered || isPaused) return;
+
+        const timer = setInterval(() => {
+            const nextSlide = (currentSlide + 1) % slides.length;
+            changeSlide(nextSlide);
+        }, 4000);
+
+        return () => clearInterval(timer);
+    }, [currentSlide, isPaused, hasEntered]);
+
     return (
         <section id="vision-section" ref={sectionRef} className="vision-section">
-            <div className="vision-container">
+            <div
+                className="vision-container"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+            >
                 <div className="vision-content-wrapper">
                     <div className="vision-content" ref={textRef}>
                         <h2 className="section-title">{slide.title}</h2>

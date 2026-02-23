@@ -31,7 +31,7 @@ const options = {
     ]
 };
 
-const ConfiguratorUI = ({ config, setConfig }) => {
+const ConfiguratorUI = ({ config, setConfig, isComplete, onRequestQuote }) => {
     const [activeTab, setActiveTab] = useState('body');
 
     const handleSelect = (category, id) => {
@@ -71,8 +71,13 @@ const ConfiguratorUI = ({ config, setConfig }) => {
             </div>
 
             <div className="action-footer">
-                <button className="premium-btn full-width">
-                    <span>Request Quote</span>
+                <button
+                    className="premium-btn full-width"
+                    disabled={!isComplete}
+                    onClick={onRequestQuote}
+                    style={{ opacity: isComplete ? 1 : 0.5, cursor: isComplete ? 'pointer' : 'not-allowed' }}
+                >
+                    <span>{isComplete ? 'Request Quote' : 'Select All Components'}</span>
                 </button>
             </div>
         </div>

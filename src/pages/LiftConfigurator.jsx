@@ -6,6 +6,7 @@ import ConfiguratorUI from '../components/ConfiguratorUI';
 import { EffectComposer, Bloom, N8AO } from '@react-three/postprocessing';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { gsap } from 'gsap';
 import './LiftConfigurator.css';
 
 const pricingMap = {
@@ -25,17 +26,54 @@ const labelsMap = {
 };
 
 const LiftConfigurator = () => {
+    const overlayRef = React.useRef(null);
+    const [showQuote, setShowQuote] = useState(false);
+
+    // Start with empty selections
     const [config, setConfig] = useState({
-        body: 'brushed_steel',
-        floor: 'dark_marble',
-        ceiling: 'led_panel',
-        handle: 'gold',
-        button_pad: 'touch_glass'
+        body: null,
+        floor: null,
+        ceiling: null,
+        handle: null,
+        button_pad: null
     });
 
-    const totalCost = Object.keys(config).reduce((acc, key) => acc + pricingMap[key][config[key]], 0);
+    const isComplete = Object.values(config).every(val => val !== null);
+    const totalCost = Object.keys(config).reduce((acc, key) => acc + (config[key] ? pricingMap[key][config[key]] : 0), 0);
 
+    // Animation for the overlay when requested
+    React.useEffect(() => {
+        if (showQuote && overlayRef.current) {
+            const tl = gsap.timeline();
 
+            // Initial centered, scaled up, invisible state
+            gsap.set(overlayRef.current, {
+                left: '50vw',
+                bottom: '50vh',
+                xPercent: -50,
+                yPercent: 50,
+                scale: 1.5,
+                opacity: 0,
+            });
+
+            // Fade in centered
+            tl.to(overlayRef.current, {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out',
+            })
+                // Hold for 1 second, then shrink and move to bottom-left corner
+                .to(overlayRef.current, {
+                    scale: 1,
+                    left: '30px',
+                    bottom: '30px',
+                    xPercent: 0,
+                    yPercent: 0,
+                    duration: 1.2,
+                    ease: 'power3.out',
+                }, "+=1");
+        }
+    }, [showQuote]);
     return (
         <div className="configurator-wrapper">
             <Link to="/" className="back-btn">
@@ -82,25 +120,32 @@ const LiftConfigurator = () => {
                     />
                 </Canvas>
 
-                {/* Cost Estimation Overlay */}
-                <div className="cost-overlay">
-                    <h3>Configuration Specs</h3>
-                    <ul>
-                        <li><span className="spec-label">Cabin Body:</span> {labelsMap.body[config.body]}</li>
-                        <li><span className="spec-label">Floor:</span> {labelsMap.floor[config.floor]}</li>
-                        <li><span className="spec-label">Ceiling:</span> {labelsMap.ceiling[config.ceiling]}</li>
-                        <li><span className="spec-label">Handrail:</span> {labelsMap.handle[config.handle]}</li>
-                        <li><span className="spec-label">Button Pad:</span> {labelsMap.button_pad[config.button_pad]}</li>
-                    </ul>
-                    <div className="cost-total">
-                        <span>Estimated Total:</span>
-                        <strong>${totalCost.toLocaleString()}</strong>
+                {/* Cost Estimation Overlay - only shows when requested */}
+                {showQuote && (
+                    <div ref={overlayRef} className="cost-overlay">
+                        <h3>Configuration Specs</h3>
+                        <ul>
+                            <li><span className="spec-label">Cabin Body:</span> {config.body ? labelsMap.body[config.body] : '-'}</li>
+                            <li><span className="spec-label">Floor:</span> {config.floor ? labelsMap.floor[config.floor] : '-'}</li>
+                            <li><span className="spec-label">Ceiling:</span> {config.ceiling ? labelsMap.ceiling[config.ceiling] : '-'}</li>
+                            <li><span className="spec-label">Handrail:</span> {config.handle ? labelsMap.handle[config.handle] : '-'}</li>
+                            <li><span className="spec-label">Button Pad:</span> {config.button_pad ? labelsMap.button_pad[config.button_pad] : '-'}</li>
+                        </ul>
+                        <div className="cost-total">
+                            <span>Estimated Total:</span>
+                            <strong>${totalCost.toLocaleString()}</strong>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <div className="ui-container">
-                <ConfiguratorUI config={config} setConfig={setConfig} />
+                <ConfiguratorUI
+                    config={config}
+                    setConfig={setConfig}
+                    isComplete={isComplete}
+                    onRequestQuote={() => setShowQuote(true)}
+                />
             </div>
         </div>
     );

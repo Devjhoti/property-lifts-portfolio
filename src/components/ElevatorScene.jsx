@@ -34,6 +34,36 @@ const materialMap = {
 
 const outerMaterial = new THREE.MeshStandardMaterial({ color: '#2a2a2a', metalness: 0.3, roughness: 0.9 });
 
+import { Text } from '@react-three/drei';
+
+const FlyingPart = ({ visible, children, flyFrom = [0, 5, 0] }) => {
+    const groupRef = useRef();
+
+    useFrame((state, delta) => {
+        if (!groupRef.current) return;
+
+        const targetX = visible ? 0 : flyFrom[0];
+        const targetY = visible ? 0 : flyFrom[1];
+        const targetZ = visible ? 0 : flyFrom[2];
+        const targetScale = visible ? 1 : 0.001;
+
+        groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, targetX, delta * 4);
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, delta * 4);
+        groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, delta * 4);
+
+        const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, delta * 6);
+        groupRef.current.scale.setScalar(s);
+
+        groupRef.current.visible = s > 0.01;
+    });
+
+    return (
+        <group ref={groupRef} position={flyFrom} scale={0.001} visible={visible}>
+            {children}
+        </group>
+    );
+};
+
 // Custom Component that hides the wall if it's blocking the view
 const SmartWall = ({ normal, children }) => {
     const groupRef = useRef();
@@ -62,73 +92,93 @@ const ElevatorScene = ({ config }) => {
 
     return (
         <group ref={groupRef} position={[0, -0.5, 0]}>
+            {/* Initial Text when nothing is selected */}
+            <FlyingPart visible={!config.body && !config.floor && !config.ceiling && !config.handle && !config.button_pad} flyFrom={[0, -5, 0]}>
+                <Text position={[0, 2, 0]} fontSize={0.4} color="#F08F24" anchorX="center" anchorY="middle" textAlign="center">
+                    Please Select Components{'\n'}to Visualise
+                </Text>
+            </FlyingPart>
+
             {/* Floor */}
-            <mesh position={[0, -3, 0]} rotation={[-Math.PI / 2, 0, 0]} material={materialMap.floor[config.floor]} receiveShadow>
-                <planeGeometry args={[4, 4]} />
-            </mesh>
+            <FlyingPart visible={!!config.floor} flyFrom={[0, -10, 0]}>
+                <mesh position={[0, -3, 0]} rotation={[-Math.PI / 2, 0, 0]} material={config.floor ? materialMap.floor[config.floor] : null} receiveShadow>
+                    <planeGeometry args={[4, 4]} />
+                </mesh>
+            </FlyingPart>
 
             {/* Ceiling */}
-            <mesh position={[0, 3, 0]} rotation={[Math.PI / 2, 0, 0]} material={materialMap.ceiling[config.ceiling]}>
-                <planeGeometry args={[4, 4]} />
-            </mesh>
+            <FlyingPart visible={!!config.ceiling} flyFrom={[0, 10, 0]}>
+                <mesh position={[0, 3, 0]} rotation={[Math.PI / 2, 0, 0]} material={config.ceiling ? materialMap.ceiling[config.ceiling] : null}>
+                    <planeGeometry args={[4, 4]} />
+                </mesh>
+            </FlyingPart>
 
-            {/* Back Wall Group */}
-            <SmartWall normal={[0, 0, -1]}>
-                <mesh position={[0, 0, -2.1]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[4.4, 6, 0.2]} />
-                </mesh>
-                <mesh position={[0, 0, -1.99]} material={materialMap.body[config.body]} receiveShadow>
-                    <planeGeometry args={[4, 6]} />
-                </mesh>
-                {/* Handle Rail inside back wall */}
-                <mesh position={[0, -1.0, -1.9]} rotation={[0, 0, Math.PI / 2]} material={materialMap.handle[config.handle]} castShadow>
+            {/* Body Walls (Outer structure and inner walls together) */}
+            <FlyingPart visible={!!config.body} flyFrom={[-10, 0, 0]}>
+                {/* Back Wall Group */}
+                <SmartWall normal={[0, 0, -1]}>
+                    <mesh position={[0, 0, -2.1]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[4.4, 6, 0.2]} />
+                    </mesh>
+                    <mesh position={[0, 0, -1.99]} material={config.body ? materialMap.body[config.body] : null} receiveShadow>
+                        <planeGeometry args={[4, 6]} />
+                    </mesh>
+                </SmartWall>
+
+                {/* Left Wall Group */}
+                <SmartWall normal={[-1, 0, 0]}>
+                    <mesh position={[-2.1, 0, 0]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[0.2, 6, 4.4]} />
+                    </mesh>
+                    <mesh position={[-1.99, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={config.body ? materialMap.body[config.body] : null} receiveShadow>
+                        <planeGeometry args={[4, 6]} />
+                    </mesh>
+                </SmartWall>
+
+                {/* Right Wall Group */}
+                <SmartWall normal={[1, 0, 0]}>
+                    <mesh position={[2.1, 0, 0]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[0.2, 6, 4.4]} />
+                    </mesh>
+                    <mesh position={[1.99, 0, 0]} rotation={[0, -Math.PI / 2, 0]} material={config.body ? materialMap.body[config.body] : null} receiveShadow>
+                        <planeGeometry args={[4, 6]} />
+                    </mesh>
+                </SmartWall>
+
+                {/* Front Wall Group (Includes Doors) */}
+                <SmartWall normal={[0, 0, 1]}>
+                    <mesh position={[0, 2.6, 2.1]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[4.4, 0.8, 0.2]} />
+                    </mesh>
+                    <mesh position={[-1.75, -0.4, 2.1]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[0.9, 5.2, 0.2]} />
+                    </mesh>
+                    <mesh position={[1.75, -0.4, 2.1]} material={outerMaterial} castShadow>
+                        <boxGeometry args={[0.9, 5.2, 0.2]} />
+                    </mesh>
+
+                    {/* Doors slightly open */}
+                    <mesh position={[-0.85, -0.4, 2]} material={config.body ? materialMap.body[config.body] : null} castShadow>
+                        <boxGeometry args={[0.9, 5.2, 0.06]} />
+                    </mesh>
+                    <mesh position={[0.85, -0.4, 2]} material={config.body ? materialMap.body[config.body] : null} castShadow>
+                        <boxGeometry args={[0.9, 5.2, 0.06]} />
+                    </mesh>
+                </SmartWall>
+            </FlyingPart>
+
+            {/* Handleboard */}
+            <FlyingPart visible={!!config.handle && !!config.body} flyFrom={[0, 0, -10]}>
+                <mesh position={[0, -1.0, -1.9]} rotation={[0, 0, Math.PI / 2]} material={config.handle ? materialMap.handle[config.handle] : null} castShadow>
                     <cylinderGeometry args={[0.05, 0.05, 3, 16]} />
                 </mesh>
-            </SmartWall>
+            </FlyingPart>
 
-            {/* Left Wall Group */}
-            <SmartWall normal={[-1, 0, 0]}>
-                <mesh position={[-2.1, 0, 0]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[0.2, 6, 4.4]} />
-                </mesh>
-                <mesh position={[-1.99, 0, 0]} rotation={[0, Math.PI / 2, 0]} material={materialMap.body[config.body]} receiveShadow>
-                    <planeGeometry args={[4, 6]} />
-                </mesh>
-            </SmartWall>
-
-            {/* Right Wall Group */}
-            <SmartWall normal={[1, 0, 0]}>
-                <mesh position={[2.1, 0, 0]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[0.2, 6, 4.4]} />
-                </mesh>
-                <mesh position={[1.99, 0, 0]} rotation={[0, -Math.PI / 2, 0]} material={materialMap.body[config.body]} receiveShadow>
-                    <planeGeometry args={[4, 6]} />
-                </mesh>
-            </SmartWall>
-
-            {/* Front Wall Group (Includes Doors and Button Pad) */}
-            <SmartWall normal={[0, 0, 1]}>
-                <mesh position={[0, 2.6, 2.1]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[4.4, 0.8, 0.2]} />
-                </mesh>
-                <mesh position={[-1.75, -0.4, 2.1]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[0.9, 5.2, 0.2]} />
-                </mesh>
-                <mesh position={[1.75, -0.4, 2.1]} material={outerMaterial} castShadow>
-                    <boxGeometry args={[0.9, 5.2, 0.2]} />
-                </mesh>
-
-                {/* Doors slightly open */}
-                <mesh position={[-0.85, -0.4, 2]} material={materialMap.body[config.body]} castShadow>
-                    <boxGeometry args={[0.9, 5.2, 0.06]} />
-                </mesh>
-                <mesh position={[0.85, -0.4, 2]} material={materialMap.body[config.body]} castShadow>
-                    <boxGeometry args={[0.9, 5.2, 0.06]} />
-                </mesh>
-
+            {/* Button Pad */}
+            <FlyingPart visible={!!config.button_pad && !!config.body} flyFrom={[10, 0, 0]}>
                 {/* Configurable Button Pad on Right Inner Frame facing inwards */}
                 <group position={[1.5, -0.6, 1.975]} rotation={[0, Math.PI, 0]}>
-                    <mesh material={materialMap.button_pad[config.button_pad]} castShadow>
+                    <mesh material={config.button_pad ? materialMap.button_pad[config.button_pad] : null} castShadow>
                         <boxGeometry args={[0.4, 1.2, 0.05]} />
                     </mesh>
 
@@ -142,7 +192,7 @@ const ElevatorScene = ({ config }) => {
                         <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
                     </mesh>
                 </group>
-            </SmartWall>
+            </FlyingPart>
         </group>
     );
 };
