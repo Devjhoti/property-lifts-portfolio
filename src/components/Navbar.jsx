@@ -29,8 +29,8 @@ const Navbar = () => {
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
             <div className="navbar-container">
                 <a href="#hero-section" className="logo-wrapper">
-                    <img src="/propertly-lifts-logo.webp" alt="Property Lifts Logo" className="logo-img logo-normal" />
-                    <img src="/propertly-lifts-logo-white.webp" alt="Property Lifts White Logo" className="logo-img logo-white" />
+                    <img src="/propertly-lifts-logo-white.webp" alt="Property Lifts White Logo" className="logo-img logo-default" />
+                    <img src="/propertly-lifts-logo-white.webp" alt="Property Lifts Logo" className="logo-img logo-scrolled" />
                 </a>
 
                 <div className="nav-links">
